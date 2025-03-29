@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  postgres-db:
+    image: postgres:bookworm
+    container_name: user-postgres-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: review
+      POSTGRES_PASSWORD: rating
+      POSTGRES_DB: user-db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U review -d user-db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  postgres-data:
+
+networks:
+  app-network:
+    driver: bridge
